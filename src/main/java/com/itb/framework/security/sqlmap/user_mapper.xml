@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="MARIA.USER">
+
+
+	<select id="getUserInfo" parameterType="java.util.HashMap" resultType="userDto">
+		 SELECT AGENT_USERID AS username,  
+                PASSWD as password                     
+         FROM TB_NBIZ_AGENT_USER_INFO 
+         WHERE  AGENT_USERID =  #{value}
+	</select>
+	
+</mapper>

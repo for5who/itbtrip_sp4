@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<typeAliases>
+		<typeAlias type="com.itb.framework.security.dto.UserDTO" alias="userDto" />
+	</typeAliases>
+	
+	<mappers>
+		<mapper resource="com/itb/framework/security/sqlmap/user_mapper.xml" /> 
+	</mappers>
+</configuration>

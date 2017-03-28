@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans 
+    xmlns="http://www.springframework.org/schema/security"
+    xmlns:beans="http://www.springframework.org/schema/beans"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans 
+    http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+	http://www.springframework.org/schema/security 
+	http://www.springframework.org/schema/security/spring-security-4.2.xsd
+	http://www.springframework.org/schema/context 
+    http://www.springframework.org/schema/context/spring-context-4.2.xsd
+	http://www.springframework.org/schema/util 
+	http://www.springframework.org/schema/util/spring-util-4.2.xsd
+    ">
+	
+	 <context:component-scan base-package="com.itb.framework.." use-default-filters="false">	
+		 <context:include-filter expression="org.springframework.stereotype.Service" type="annotation" />
+   		 <context:include-filter expression="org.springframework.stereotype.Repository" type="annotation" />
+     </context:component-scan>			
+     
+     <http pattern="/resources/**/*" security="none"/>
+
+	 <http auto-config="true">
+		 <csrf disabled="true"/>
+		 
+		 <!-- intercept -->
+		 <intercept-url pattern="/start.do" access="permitAll"/>
+		 <intercept-url pattern="/jtaTest.do" access="permitAll"/>
+		 <intercept-url pattern="/signin.do" access="permitAll"/>
+	     <intercept-url pattern="/**/*.do" access="hasAnyRole('ROLE_GUEST','ROLE_USER','ROLE_ADMIN')" /> 
+		 
+		  
+		 <form-login
+	     login-page="/signin.do"
+	     username-parameter="user_id" 
+	     password-parameter="user_pwd"
+	     login-processing-url="/login_check"
+	     authentication-success-handler-ref="signinSuccessHandler"
+	     authentication-failure-handler-ref="signinFailureHandler"
+	     default-target-url="/main.do"
+	     always-use-default-target="true"
+	     />
+	
+		 <session-management>
+		 	  <concurrency-control max-sessions="1" expired-url="/signin.do?retFlag=session" />
+		 </session-management> 
+		 
+		 <!-- 로그아웃 -->
+	     <logout
+	     invalidate-session="true"
+	     logout-success-url="/signin.do?retFlag=logout"
+	     logout-url="/signout.do" /> 
+     </http>
+     
+ 	 <!-- 로그인 성공 -->
+     <beans:bean id="signinSuccessHandler" class="com.itb.framework.security.service.SigninSuccessHandler" />
+     
+     <!-- 로그인 실패 -->
+     <beans:bean id="signinFailureHandler" class="com.itb.framework.security.service.SigninFailureHandler">
+         <beans:property name="defaultFailureUrl" value="/signin.do?retFlag=login_fail" />
+     </beans:bean>
+	 
+	 <beans:bean id="userService" class="com.itb.framework.security.service.UserService" />
+	 <beans:bean id="customAuthenticationProvider" class="com.itb.framework.security.service.CustomAuthenticationProvider" />
+	 <authentication-manager alias="authenticationManager">
+	     <authentication-provider ref="customAuthenticationProvider" />
+     </authentication-manager>
+     
+     <!-- 암호화모듈 -->
+	 <beans:bean id="passwordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>	
+	
+</beans:beans>

@@ -1,0 +1,10 @@
+<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8" %>
+<html>
+<body>
+<h2>Error</h2>
+<br/>
+errorCode : ${errorCode}
+<br/>
+errorMessage : ${errorMsg}
+</body>
+</html>
